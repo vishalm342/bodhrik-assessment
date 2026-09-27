@@ -1,5 +1,5 @@
 import re
-from typing import Annotated
+from typing import Annotated, Callable
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
 from app.db.session import get_db
-from app.models.user import User
+from app.models.user import User, UserRole
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 DatabaseSession = Annotated[Session, Depends(get_db)]
@@ -41,3 +41,16 @@ def get_current_user(
     if user is None:
         raise credentials_error()
     return user
+
+
+def require_roles(*allowed_roles: UserRole) -> Callable[..., User]:
+    """Authorize an action by the database user's role; ownership stays in queries."""
+    def authorize(user: Annotated[User, Depends(get_current_user)]) -> User:
+        if user.role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Your role is not permitted to perform this action",
+            )
+        return user
+
+    return authorize
