@@ -10,3 +10,4 @@ python-multipart
 pytest
 httpx
 redis>=5
+ruff==0.15.7
