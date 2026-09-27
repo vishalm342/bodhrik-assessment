@@ -4,3 +4,8 @@ sqlalchemy>=2.0
 psycopg[binary]
 alembic
 pydantic-settings
+PyJWT
+pwdlib[argon2]
+python-multipart
+pytest
+httpx
