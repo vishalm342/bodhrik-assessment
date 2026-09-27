@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str
+    redis_url: str = "redis://localhost:6379/0"
     jwt_secret_key: SecretStr = Field(min_length=32)
     jwt_algorithm: Literal["HS256"] = "HS256"
     access_token_expire_minutes: int = Field(default=30, gt=0)
