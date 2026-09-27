@@ -1,0 +1,2 @@
+target-version = "py313"
+extend-exclude = [".venv-1", "source", "source.venv"]
